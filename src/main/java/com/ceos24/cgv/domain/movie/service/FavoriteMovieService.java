@@ -30,7 +30,7 @@ public class FavoriteMovieService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
-        if (favoriteMovieRepository.existsByMovieIdAndMemberId(movie.getId(), member.getId())) {
+        if (favoriteMovieRepository.existsByMovieIdAndMemberId(movieId, member.getId())) {
             throw new BusinessException(ErrorCode.FAVORITE_MOVIE_ALREADY_EXIST);
         }
 

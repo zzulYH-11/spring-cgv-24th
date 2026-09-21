@@ -14,5 +14,8 @@ public record SignUpRequest(
         String loginId,
 
         @Schema(description = "비밀번호", example = "password123!")
-        String password
+        String password,
+
+        @Schema(description = "어드민 가입용 시크릿 토큰")
+        String adminToken
 ) {}

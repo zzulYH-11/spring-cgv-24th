@@ -10,6 +10,7 @@ import com.ceos24.cgv.global.exception.ErrorCode;
 import com.ceos24.cgv.global.security.CustomUserDetails;
 import com.ceos24.cgv.global.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,16 +20,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
+    private final String adminToken;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
 
+    public AuthService(
+            @Value("${admin.token}") String adminToken,
+            MemberRepository memberRepository,
+            PasswordEncoder passwordEncoder,
+            JwtProvider jwtProvider,
+            AuthenticationManager authenticationManager) {
+        this.adminToken = adminToken;
+        this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtProvider = jwtProvider;
+        this.authenticationManager = authenticationManager;
+    }
+
     @Transactional
     public void signUp(SignUpRequest request) {
+
 
         if (memberRepository.existsByLoginId(request.loginId())) {
             throw new BusinessException(ErrorCode.AUTH_LOGIN_ID_ALREADY_EXISTS);
@@ -38,12 +53,20 @@ public class AuthService {
             throw new BusinessException(ErrorCode.AUTH_EMAIL_ALREADY_EXISTS);
         }
 
+        Role role;
+
+        if (adminToken.equals(request.adminToken())) {
+            role = Role.ADMIN;
+        } else {
+            role = Role.USER;
+        }
+
         Member member = Member.builder()
                 .loginId(request.loginId())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .name(request.name())
-                .role(Role.USER)
+                .role(role)
                 .build();
 
         memberRepository.save(member);
@@ -58,7 +81,6 @@ public class AuthService {
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
             return jwtProvider.createAccessToken(userDetails.getMemberId().toString());
         } catch (AuthenticationException e) {
             throw new BusinessException(ErrorCode.AUTH_INVALID_CREDENTIALS);
