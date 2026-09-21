@@ -8,6 +8,7 @@ import com.ceos24.cgv.global.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -56,6 +57,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/movies").permitAll() // 전체 영화 조회
+                        .requestMatchers(HttpMethod.GET, "/api/screenings/{screeningId}").permitAll() // 상영 정보 상세 조회
+                        .requestMatchers(HttpMethod.GET, "/api/screenings/{screeningId}/seats").permitAll() // 특정 상영 좌석 조회
+                        .requestMatchers(HttpMethod.GET, "/api/theaters/{theaterId}/screens").permitAll() // 상영관 목록 조회
+                        .requestMatchers(HttpMethod.GET, "/api/theaters/{theaterId}/screenings").permitAll() // 영화관별 상영 시간표 조
+                        .requestMatchers(HttpMethod.GET, "/api/theaters/{theaterId}/movies").permitAll() // 영화관별 영화 조회
+                        .requestMatchers(HttpMethod.GET, "/api/theaters").permitAll() // 전체 영화관 목록 조회
+                        .requestMatchers(HttpMethod.GET, "/api/theaters/{theaterId}/stores").permitAll() // 매장 정보 조회
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
