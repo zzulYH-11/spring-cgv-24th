@@ -29,6 +29,7 @@ public enum ErrorCode {
     OUT_OF_STOCK(400, "재고가 부족합니다."),
 
     // Reservation / Theater / FavoriteTheater
+    ALREADY_RESERVED(409, "이미 예매된 좌석입니다."),
     THEATER_NOT_FOUND(404, "존재하지 않는 영화관입니다."),
     RESERVATION_NOT_FOUND(404, "존재하지 않는 예매이거나 권한이 없습니다."),
     SEAT_NOT_FOUND(404, "존재하지 않는 좌석입니다."),
