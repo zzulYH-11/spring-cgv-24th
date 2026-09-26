@@ -24,16 +24,14 @@ public class AuthController {
 
     @Operation(summary = "회원가입", description = "새로운 사용자를 등록합니다.")
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<Void>> signUp(
-            @RequestBody SignUpRequest request) {
+    public ResponseEntity<ApiResponse<Void>> signUp(@RequestBody SignUpRequest request) {
         authService.signUp(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(null));
     }
 
     @Operation(summary = "로그인", description = "아이디와 비밀번호로 로그인하여 Access Token을 발급받습니다.")
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<String>> login(
-            @RequestBody LoginRequest request) {
+    public ResponseEntity<ApiResponse<String>> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(ApiResponse.success(authService.login(request)));
     }
 }

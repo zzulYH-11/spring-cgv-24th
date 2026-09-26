@@ -36,40 +36,45 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
+        http.csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                        .accessDeniedHandler(jwtAccessDeniedHandler)
-                )
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/movies").permitAll() // 전체 영화 조회
-                        .requestMatchers(HttpMethod.GET, "/api/screenings/{screeningId}").permitAll() // 상영 정보 상세 조회
-                        .requestMatchers(HttpMethod.GET, "/api/screenings/{screeningId}/seats").permitAll() // 특정 상영 좌석 조회
-                        .requestMatchers(HttpMethod.GET, "/api/theaters/{theaterId}/screens").permitAll() // 상영관 목록 조회
-                        .requestMatchers(HttpMethod.GET, "/api/theaters/{theaterId}/screenings").permitAll() // 영화관별 상영 시간표 조
-                        .requestMatchers(HttpMethod.GET, "/api/theaters/{theaterId}/movies").permitAll() // 영화관별 영화 조회
-                        .requestMatchers(HttpMethod.GET, "/api/theaters").permitAll() // 전체 영화관 목록 조회
-                        .requestMatchers(HttpMethod.GET, "/api/theaters/{theaterId}/stores").permitAll() // 매장 정보 조회
-                        .anyRequest().authenticated()
-                )
+                        .accessDeniedHandler(jwtAccessDeniedHandler))
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
+                        .permitAll()
+                        .requestMatchers("/api/admin/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/movies")
+                        .permitAll() // 전체 영화 조회
+                        .requestMatchers(HttpMethod.GET, "/api/screenings/{screeningId}")
+                        .permitAll() // 상영 정보 상세 조회
+                        .requestMatchers(HttpMethod.GET, "/api/screenings/{screeningId}/seats")
+                        .permitAll() // 특정 상영 좌석 조회
+                        .requestMatchers(HttpMethod.GET, "/api/theaters/{theaterId}/screens")
+                        .permitAll() // 상영관 목록 조회
+                        .requestMatchers(HttpMethod.GET, "/api/theaters/{theaterId}/screenings")
+                        .permitAll() // 영화관별 상영 시간표 조
+                        .requestMatchers(HttpMethod.GET, "/api/theaters/{theaterId}/movies")
+                        .permitAll() // 영화관별 영화 조회
+                        .requestMatchers(HttpMethod.GET, "/api/theaters")
+                        .permitAll() // 전체 영화관 목록 조회
+                        .requestMatchers(HttpMethod.GET, "/api/theaters/{theaterId}/stores")
+                        .permitAll() // 매장 정보 조회
+                        .anyRequest()
+                        .authenticated())
                 .addFilterBefore(
                         new JwtAuthenticationFilter(jwtProvider, memberRepository),
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                        UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

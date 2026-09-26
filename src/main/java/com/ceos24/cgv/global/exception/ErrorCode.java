@@ -27,7 +27,7 @@ public enum ErrorCode {
     STORE_NOT_FOUND(404, "존재하지 않는 매장입니다."),
     MENU_NOT_FOUND(404, "해당 매장에 존재하지 않는 메뉴입니다."),
     OUT_OF_STOCK(400, "재고가 부족합니다."),
-    
+
     // Reservation / Theater / FavoriteTheater
     THEATER_NOT_FOUND(404, "존재하지 않는 영화관입니다."),
     RESERVATION_NOT_FOUND(404, "존재하지 않는 예매이거나 권한이 없습니다."),
@@ -36,7 +36,7 @@ public enum ErrorCode {
     SCREEN_NOT_FOUND(404, "존재하지 않는 상영관입니다."),
     FAVORITE_THEATER_ALREADY_EXIST(409, "이미 찜한 영화관입니다."),
     FAVORITE_THEATER_NOT_FOUND(404, "찜한 영화관이 존재하지 않습니다."),
-    
+
     // Movie / FavoriteMovie
     MOVIE_NOT_FOUND(404, "존재하지 않는 영화입니다."),
     FAVORITE_MOVIE_ALREADY_EXIST(409, "이미 찜한 영화입니다."),
