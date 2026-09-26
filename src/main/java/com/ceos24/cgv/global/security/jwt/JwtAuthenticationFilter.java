@@ -32,11 +32,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws IOException, ServletException {
         String token = resolveToken(request);
-
         try {
             if (token != null) {
-                jwtProvider.validateToken(token);
-                Long memberId = jwtProvider.getMemberIdFromToken(token);
+                String subjectStr = jwtProvider.getMemberIdFromTokenAfterValidate(token);
+                Long memberId = Long.parseLong(subjectStr);
                 Member member = memberRepository.findById(memberId).orElse(null);
                 if (member != null) {
                     CustomUserDetails userDetails = new CustomUserDetails(member);

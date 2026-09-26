@@ -39,21 +39,13 @@ public class JwtProvider {
                 .compact();
     }
 
-    public void validateToken(String token) {
-        Jwts.parser()
+    public String getMemberIdFromTokenAfterValidate(String token) {
+        return Jwts.parser()
                 .verifyWith(secretKey)
                 .requireIssuer("http://localhost:8080")
-                .build()
-                .parseSignedClaims(token);
-    }
-
-    public Long getMemberIdFromToken(String token) {
-        String subjectStr =  Jwts.parser()
-                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
-        return Long.parseLong(subjectStr);
     }
 }

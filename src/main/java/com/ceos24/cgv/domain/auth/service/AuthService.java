@@ -67,12 +67,10 @@ public class AuthService {
                 .name(request.name())
                 .role(role)
                 .build();
-
         memberRepository.save(member);
     }
 
     public String login(LoginRequest request) {
-
         try {
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(request.loginId(), request.password());
