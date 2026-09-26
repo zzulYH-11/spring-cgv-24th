@@ -44,7 +44,6 @@ public class AuthService {
     @Transactional
     public void signUp(SignUpRequest request) {
 
-
         if (memberRepository.existsByLoginId(request.loginId())) {
             throw new BusinessException(ErrorCode.AUTH_LOGIN_ID_ALREADY_EXISTS);
         }
